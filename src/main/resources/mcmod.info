@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rottenfiends",
+  "name": "Rotten Fiends",
+  "description": "",
+  "version": "1.0.0",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Smileycorp"],
+  "credits": "Foreck",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
