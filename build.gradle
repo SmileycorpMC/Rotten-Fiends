@@ -64,7 +64,7 @@ configurations {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
-	implementation "curse.maven:geckolib-388172:4393461"
+	implementation "curse.maven:geckolib-388172:4020277"
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
