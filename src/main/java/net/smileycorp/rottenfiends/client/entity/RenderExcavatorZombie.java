@@ -1,6 +1,5 @@
 package net.smileycorp.rottenfiends.client.entity;
 
-import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;

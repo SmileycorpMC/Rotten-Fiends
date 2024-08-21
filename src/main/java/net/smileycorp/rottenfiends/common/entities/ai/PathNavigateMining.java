@@ -3,7 +3,6 @@ package net.smileycorp.rottenfiends.common.entities.ai;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.pathfinding.WalkNodeProcessor;
 import net.minecraft.world.World;
 
 public class PathNavigateMining extends PathNavigateGround {
