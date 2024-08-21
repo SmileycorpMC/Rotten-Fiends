@@ -1,22 +1,27 @@
 package net.smileycorp.rottenfiends.common.entities;
 
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.smileycorp.rottenfiends.common.entities.ai.EntityAIMineBlock;
 import net.smileycorp.rottenfiends.config.EntityConfig;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class EntityExcavatorZombie extends EntityZombie implements IAnimatable {
+import javax.annotation.Nullable;
+
+public class EntityExcavatorZombie extends EntityZombie implements IMiningMob {
     
-    private final AnimationFactory factory = new AnimationFactory(this);
+    private boolean mining;
     
     public EntityExcavatorZombie(World world) {
         super(world);
+    }
+    
+    @Override
+    protected void updateAITasks() {
+        if (mining && ticksExisted % 10 == 0) setArmsRaised(!isArmsRaised());
     }
     
     @Override
@@ -26,17 +31,33 @@ public class EntityExcavatorZombie extends EntityZombie implements IAnimatable {
     }
     
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    protected void initEntityAI() {
+        tasks.addTask(1, new EntityAIMineBlock(this, EntityConfig.excavatorMiningRange, EntityConfig.excavatorMaxHardness,
+                EntityConfig.excavatorMiningSpeed, EntityConfig.excavatorReach));
+        super.initEntityAI();
+    }
+    
+    @Nullable
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+        return livingdata;
     }
     
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "excavator_zombie", 5, this::controller));
+    public void setItemStackToSlot(EntityEquipmentSlot slot, ItemStack stack) {
+        if (slot.getSlotType() == EntityEquipmentSlot.Type.HAND || slot == EntityEquipmentSlot.FEET) return;
+        super.setItemStackToSlot(slot, stack);
     }
     
-    private PlayState controller(AnimationEvent<EntityExcavatorZombie> event) {
-        return PlayState.CONTINUE;
+    @Override
+    protected boolean canEquipItem(ItemStack stack) {
+        EntityEquipmentSlot slot = getSlotForItemStack(stack);
+        return (slot.getSlotType() == EntityEquipmentSlot.Type.HAND || slot == EntityEquipmentSlot.FEET) ? false : super.canEquipItem(stack);
+    }
+    
+    @Override
+    public void setMining(boolean mining) {
+        if (!mining) setArmsRaised(false);
+        this.mining = mining;
     }
     
 }
