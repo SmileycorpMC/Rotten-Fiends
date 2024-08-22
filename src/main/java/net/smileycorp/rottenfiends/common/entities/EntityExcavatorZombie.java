@@ -1,12 +1,20 @@
 package net.smileycorp.rottenfiends.common.entities;
 
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.smileycorp.rottenfiends.common.entities.ai.EntityAIMineBlock;
+import net.smileycorp.rottenfiends.common.entities.ai.PathNavigateMining;
 import net.smileycorp.rottenfiends.config.EntityConfig;
 
 import javax.annotation.Nullable;
@@ -17,11 +25,12 @@ public class EntityExcavatorZombie extends EntityZombie implements IMiningMob {
     
     public EntityExcavatorZombie(World world) {
         super(world);
+        navigator = new PathNavigateMining(this, world, EntityConfig.excavatorMaxHardness);
     }
     
     @Override
     protected void updateAITasks() {
-        if (mining && ticksExisted % 10 == 0) setArmsRaised(!isArmsRaised());
+        if (mining && ticksExisted % 3 == 0) setArmsRaised(!isArmsRaised());
     }
     
     @Override
@@ -35,6 +44,15 @@ public class EntityExcavatorZombie extends EntityZombie implements IMiningMob {
         tasks.addTask(1, new EntityAIMineBlock(this, EntityConfig.excavatorMiningRange, EntityConfig.excavatorMaxHardness,
                 EntityConfig.excavatorMiningSpeed, EntityConfig.excavatorReach));
         super.initEntityAI();
+    }
+    
+    @Override
+    protected void applyEntityAI() {
+        tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
+        targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, EntityPigZombie.class));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, false));
+        targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+        targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, false));
     }
     
     @Nullable

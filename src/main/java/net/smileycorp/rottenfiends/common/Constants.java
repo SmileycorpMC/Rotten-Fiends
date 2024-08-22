@@ -8,8 +8,8 @@ public class Constants {
     
     public static final String MODID = "rottenfiends";
     public static final String NAME = "Rotten Fiends";
-    public static final String VERSION = "1.0.0";
-    public static final String DEPENDENCIES = "required-after:geckolib3";
+    public static final String VERSION = "alpha-0.1.1";
+    public static final String DEPENDENCIES = "";
     private static final String PACKAGE = "net.smileycorp.rottenfiends.";
     public static final String CLIENT_PROXY = PACKAGE + "client.ClientProxy";
     public static final String SERVER_PROXY = PACKAGE + "common.CommonProxy";

@@ -16,7 +16,7 @@ public class PathNavigateMining extends PathNavigateGround {
     }
     
     protected PathFinder getPathFinder() {
-        nodeProcessor = new MiningNodeProcessor(maxHardness);
+        nodeProcessor = new MiningNodeProcessor(entity, maxHardness);
         return new PathFinder(nodeProcessor);
     }
     
