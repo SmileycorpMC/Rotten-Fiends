@@ -15,7 +15,7 @@ public class EntityConfig {
     public static double excavatorReach;
     
     public static void syncConfig(FMLPreInitializationEvent event) {
-        Configuration config = new Configuration(new File(event.getModConfigurationDirectory().getPath() + "/" + Constants.MODID + "/entities.cfg"));
+        Configuration config = new Configuration(new File(event.getModConfigurationDirectory().getPath() + "/" + Constants.MODID + ".cfg"));
         try{
             config.load();
             //excavator
