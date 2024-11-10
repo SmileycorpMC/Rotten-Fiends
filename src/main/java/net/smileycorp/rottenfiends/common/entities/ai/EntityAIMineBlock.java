@@ -5,6 +5,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +15,8 @@ import net.smileycorp.rottenfiends.common.entities.IMiningMob;
 
 public class EntityAIMineBlock  extends EntityAIBase {
     
+    private static final float PI_OVER_4 =  0.785398f;
+    private static final float PI = 3.141592f;
     protected final EntityLiving entity;
     protected final double miningRange, maxHardness, miningSpeed, reach;
     protected BlockPos target = BlockPos.ORIGIN;
@@ -39,6 +42,7 @@ public class EntityAIMineBlock  extends EntityAIBase {
         totalBreakingTime = 0;
         breakingTime = 0;
         previousBreakProgress = -1;
+        entity.getNavigator().tryMoveToEntityLiving(entity.getAttackTarget(), 1);
         if (entity instanceof IMiningMob) ((IMiningMob) entity).setMining(false);
     }
     
@@ -105,10 +109,18 @@ public class EntityAIMineBlock  extends EntityAIBase {
     @Override
     public boolean shouldContinueExecuting() {
         if (state == null) return false;
-        if (entity.getAttackTarget() == null) return false;
-        if (entity.getDistanceSq(entity.getAttackTarget()) > miningRange * miningRange) return false;
+        EntityLivingBase attackTarget = entity.getAttackTarget();
+        if (attackTarget == null) return false;
+        if (entity.getDistanceSq(attackTarget) > miningRange * miningRange) return false;
         if (entity.getDistanceSq(target) > reach * reach) return false;
-        return entity.world.getBlockState(target) == (state);
+        if (entity.world.getBlockState(target) != state) return false;
+        Vec3d start = new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+        Vec3d dir1 = getDirectionVec(start,
+                new Vec3d(attackTarget.posX, attackTarget.posY + attackTarget.getEyeHeight(), attackTarget.posZ));
+        Vec3d dir2 = getDirectionVec(start, new Vec3d(target.getX() + 0.5f, target.getY() + 0.5f, target.getZ() + 0.5f));
+        if (Math.abs(dir1.x - dir2.x) > PI_OVER_4) return false;
+        if (Math.abs(dir1.z - dir2.z) > PI_OVER_4) return false;
+        return Math.abs(dir1.y - dir2.y) <= PI;
     }
     
     private RayTraceResult rayTrace(Vec3d start, Vec3d end, double scale) {
