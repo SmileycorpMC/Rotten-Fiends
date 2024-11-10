@@ -30,7 +30,7 @@ public class EntityExcavatorZombie extends EntityZombie implements IMiningMob {
     
     @Override
     protected void updateAITasks() {
-        if (mining && ticksExisted % 3 == 0) setArmsRaised(!isArmsRaised());
+        if (mining && ticksExisted % 3 == 0) super.setArmsRaised(!isArmsRaised());
     }
     
     @Override
@@ -73,8 +73,11 @@ public class EntityExcavatorZombie extends EntityZombie implements IMiningMob {
     }
     
     @Override
+    public void setArmsRaised(boolean armsRaised) {}
+    
+    @Override
     public void setMining(boolean mining) {
-        if (!mining) setArmsRaised(false);
+        if (!mining) super.setArmsRaised(false);
         this.mining = mining;
     }
     

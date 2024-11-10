@@ -45,6 +45,8 @@ public class EntityAIMineBlock  extends EntityAIBase {
     public void updateTask() {
         super.updateTask();
         if (entity.getRNG().nextInt(20) == 0) {
+            entity.getLookHelper().setLookPosition(target.getX() + 0.5f, target.getY() + 0.5f, target.getZ() + 0.5f,
+                    180, 20);
             SoundType type = state.getBlock().getSoundType(state, entity.world, target, entity);
             entity.playSound(type.getHitSound(), (type.getVolume() + 1) / 8f, type.getPitch() * 0.5f);
         }
@@ -94,7 +96,7 @@ public class EntityAIMineBlock  extends EntityAIBase {
             if (entity instanceof IMiningMob) ((IMiningMob) entity).setMining(true);
             totalBreakingTime = (int) (1f / ((miningSpeed + 1) / hardness / 90f));
             entity.getLookHelper().setLookPosition(target.getX() + 0.5f, target.getY() + 0.5f, target.getZ() + 0.5f,
-                    1, 1);
+                    180, 20);
             return true;
         }
         return false;
